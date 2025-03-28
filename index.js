@@ -61,6 +61,27 @@ app.get("/recipes", async (req, res) => {
   }
 });
 
+const readById = async (recipeId) => {
+  try {
+    const recipe = await Recipe.findById(recipeId);
+    return recipe;
+  } catch (error) {
+    console.log(error);
+  }
+};
+app.get("/recipes/recipebyid/:recipeId", async (req, res) => {
+  try {
+    const recipe = await readById(req.params.recipeId);
+    if (recipe) {
+      res.status(201).json({ message: "Found Recipe", recipeDetails: recipe });
+    } else {
+      res.status(401).json({ error: "No Recipies Found." });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch Recipe." });
+  }
+});
+
 const recipeDelete = async (recipeId) => {
   try {
     const deletedRecipe = await Recipe.findByIdAndDelete(recipeId);
